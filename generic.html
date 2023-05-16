@@ -46,23 +46,35 @@
 									</header>
 									<h2 id="dashboard-de-la-actividad">Dashboard de la actividad</h2>
                                                                         <p><a href="https://lookerstudio.google.com/reporting/f5434ef1-1089-40bb-b615-dac9cbb8e793">Looker studio</a></p>
+									
+									<h3 id="Preguntas">PREGUNTAS</h3>
+                                                                        <h3 id="1-cuál-es-el-producto-más-vendido-en-una-ubicación-geográfica-específica"><em>1.	¿Cuál es el producto más vendido en una ubicación geográfica específica?</em></h3>
+
+                                                                        <p>Para este caso se tomó como ubicación geográfica a la ciudad de nacimiento, especificamente la ciudad de cartagena </p>
+									
 									<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">WITH</span> <span class="n">clientes_barranquilla</span> <span class="k">AS</span> <span class="p">(</span>
-<span class="k">SELECT</span> <span class="n">Numero</span><span class="p">,</span> <span class="n">Nombre_1</span><span class="p">,</span> <span class="n">Nombre_2</span><span class="p">,</span> <span class="n">Apellidos</span><span class="p">,</span> <span class="n">Ciudad_de_Nacimiento</span>
-<span class="k">FROM</span> <span class="nv">`int-is.is_act3.clientes`</span> 
-<span class="k">WHERE</span> <span class="n">Ciudad_de_Nacimiento</span> <span class="o">=</span> <span class="s1">'Barranquilla'</span>
-<span class="p">),</span> 
-<span class="n">compras_barranquilla</span> <span class="k">AS</span><span class="p">(</span>
-<span class="k">SELECT</span> <span class="n">Numero</span><span class="p">,</span> <span class="n">producto</span> <span class="k">As</span> <span class="n">Codigo</span>
-<span class="k">FROM</span> <span class="n">clientes_barranquilla</span> <span class="n">cli</span>
-<span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">`is_act3.compras`</span> <span class="n">com</span> <span class="k">ON</span> <span class="n">cli</span><span class="p">.</span><span class="n">Numero</span> <span class="o">=</span> <span class="n">com</span><span class="p">.</span><span class="n">cliente</span>
-<span class="p">)</span>
-<span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">numero_compras</span><span class="p">,</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span><span class="p">,</span> <span class="n">Producto</span> 
-<span class="k">FROM</span> <span class="n">compras_barranquilla</span> <span class="n">com</span>
-<span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">`is_act3.productos`</span> <span class="n">prod</span> <span class="k">ON</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span> <span class="o">=</span> <span class="n">com</span><span class="p">.</span><span class="n">Codigo</span>
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">Producto</span><span class="p">,</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span>
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">numero_compras</span> <span class="k">DESC</span>
-</code></pre></div></div>
+                                                                        <span class="k">SELECT</span> <span class="n">Numero</span><span class="p">,</span> <span class="n">Nombre_1</span><span class="p">,</span> <span class="n">Nombre_2</span><span class="p">,</span> <span class="n">Apellidos</span><span class="p">,</span> <span class="n">Ciudad_de_Nacimiento</span>
+                                                                        <span class="k">FROM</span> <span class="nv">`int-is.is_act3.clientes`</span> 
+                                                                        <span class="k">WHERE</span> <span class="n">Ciudad_de_Nacimiento</span> <span class="o">=</span> <span class="s1">'Barranquilla'</span>
+                                                                        <span class="p">),</span> 
+                                                                        <span class="n">compras_barranquilla</span> <span class="k">AS</span><span class="p">(</span>
+                                                                        <span class="k">SELECT</span> <span class="n">Numero</span><span class="p">,</span> <span class="n">producto</span> <span class="k">As</span> <span class="n">Codigo</span>
+                                                                        <span class="k">FROM</span> <span class="n">clientes_barranquilla</span> <span class="n">cli</span>
+                                                                        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">`is_act3.compras`</span> <span class="n">com</span> <span class="k">ON</span> <span class="n">cli</span><span class="p">.</span><span class="n">Numero</span> <span class="o">=</span> <span class="n">com</span><span class="p">.</span><span class="n">cliente</span>
+                                                                        <span class="p">)</span>
+                                                                        <span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">numero_compras</span><span class="p">,</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span><span class="p">,</span> <span class="n">Producto</span> 
+                                                                        <span class="k">FROM</span> <span class="n">compras_barranquilla</span> <span class="n">com</span>
+                                                                        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">`is_act3.productos`</span> <span class="n">prod</span> <span class="k">ON</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span> <span class="o">=</span> <span class="n">com</span><span class="p">.</span><span class="n">Codigo</span>
+                                                                        <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">Producto</span><span class="p">,</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span>
+                                                                        <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">numero_compras</span> <span class="k">DESC</span>
+                                                                        </code></pre></div></div>
+									
+									<!-- 2 --> 
+									
 									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
+									
+									<!-- 3 -->				
+
 									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
 								</div>
 							</section>
