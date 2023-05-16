@@ -229,10 +229,10 @@ ORDER BY cliente
 
 <p>En esta consulta, se utilizan dos subconsultas:</p>
 
-<ol>
+<ul>
   <li>La subconsulta "productos_por_cliente" se encarga de agrupar cada compra por cliente y producto, y cuenta la cantidad de veces que se ha comprado cada producto. Esto nos permite obtener un conteo de las compras de cada producto por cliente.</li>
   <li>La subconsulta "cantidad_productos_cliente" cuenta la cantidad de productos diferentes que ha comprado cada cliente, utilizando la subconsulta anterior. De esta manera, obtenemos la cantidad total de productos comprados por cada cliente.</li>
-</ol>
+</ul>
 
 <p>Luego, en la consulta principal, se realiza un JOIN entre la subconsulta "cantidad_productos_cliente" y la tabla "datitosclientes" para obtener la información de los clientes. Se utiliza la condición WHERE para seleccionar únicamente los clientes que han comprado la cantidad total de productos disponibles, en este caso, 10 productos. Los resultados se ordenan por cliente.</p>
 
