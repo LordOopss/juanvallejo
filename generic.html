@@ -140,7 +140,30 @@ GROUP BY Numero, Nombre_1, Nombre_2, Apellidos
 				
 									<!-- 3 -->				
 
-									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
+									<h3 id="3. ¿Cuáles son los clientes más frecuentes en realizar compras y cuánto han gastado en total?"><em>3. ¿Cuáles son los clientes más frecuentes en realizar compras y cuánto han gastado en total?</em></h3>
+
+<p>Para determinar los clientes más frecuentes en realizar compras y calcular cuánto han gastado en total, se puede utilizar la siguiente consulta:<p>
+<pre><code>
+WITH compras AS (
+SELECT com.*, prod.Precio
+FROM `clientes-386813.pepedatos.compritas` com
+INNER JOIN `clientes-386813.pepedatos.productitios` prod ON com.producto = prod.Codigo
+)
+SELECT  Numero, Nombre_1, Nombre_2, Apellidos, COUNT(*) AS Compras , SUM(precio) AS Total_Gastado
+FROM `clientes-386813.pepedatos.datitosclientes` clientes
+INNER JOIN compras ON cliente = Numero
+GROUP BY Numero, Nombre_1, Nombre_2, Apellidos
+ORDER BY Compras DESC
+</code></pre>
+
+<p>En esta consulta, se utiliza una subconsulta llamada "compras" para obtener los precios de los productos comprados. Se realiza un INNER JOIN entre la tabla de compras y la tabla de productos para obtener la información completa de cada compra.</p>
+
+<p>Luego, se realiza una consulta principal donde se seleccionan los datos de los clientes y se realiza un JOIN con la subconsulta "compras" utilizando el número del cliente. Se agrupan los datos por número de cliente, nombres y apellidos, y se utilizan las funciones COUNT y SUM para obtener el número de compras realizadas por cada cliente y el total gastado en compras.</p>
+
+<p>Finalmente, se ordena el resultado en orden descendente por la cantidad de compras, lo que nos permite identificar a los clientes más frecuentes en realizar compras.</p>								
+								
+								
+								
 								</div>
 							</section>
 
