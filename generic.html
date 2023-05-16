@@ -162,8 +162,81 @@ ORDER BY Compras DESC
 
 <p>Finalmente, se ordena el resultado en orden descendente por la cantidad de compras, lo que nos permite identificar a los clientes más frecuentes en realizar compras.</p>								
 								
-								
-								
+								<!-- 4 -->
+                                                                       <h3 id="4. ¿Cuál es el producto más vendido en cada ubicación geográfica?"><em>4. ¿Cuál es el producto más vendido en cada ubicación geográfica?</em></h3>
+
+<p>Para determinar el producto más vendido en cada ubicación geográfica, en este caso considerada como departamento, se puede utilizar la siguiente consulta:</p>
+
+<pre><code>WITH prod_ciudades AS (
+SELECT Departamento, producto, COUNT(producto) AS cantidad_compras
+FROM `clientes-386813.pepedatos.datitosclientes`
+INNER JOIN `clientes-386813.pepedatos.compritas` ON Numero = cliente
+GROUP BY Departamento, producto
+ORDER BY Departamento, cantidad_compras DESC
+), 
+s AS(
+SELECT Departamento, MAX(cantidad_compras) AS prod_popular
+FROM prod_ciudades
+GROUP BY Departamento
+),
+codigos_productos_populares AS (
+SELECT s.Departamento, producto AS cod_prod, cantidad_compras
+FROM prod_ciudades
+INNER JOIN s ON (s.prod_popular = prod_ciudades.cantidad_compras AND s.Departamento = prod_ciudades.Departamento)
+)
+
+SELECT Departamento, cod_prod, Producto, cantidad_compras
+FROM codigos_productos_populares
+INNER JOIN `clientes-386813.pepedatos.productitios` ON codigos_productos_populares.cod_prod = Codigo
+ORDER BY Departamento
+</code></pre>
+
+<p>En esta consulta, se utilizan tres subconsultas:</p>
+
+<ul>
+  <li>La subconsulta "prod_ciudades" se encarga de obtener una lista de las compras de cada producto en cada departamento. Se realiza un JOIN entre las tablas "datitosclientes" y "compritas" utilizando el número de cliente, y se agrupan los datos por departamento y producto. Luego se ordena por departamento y cantidad de compras de forma descendente.</li>
+  <li>La subconsulta "s" nos permite obtener el producto más popular en cada departamento. Se realiza un GROUP BY por departamento y se utiliza la función MAX para obtener la cantidad máxima de compras. Esto nos da como resultado el producto más vendido en cada departamento, aunque no nos indica cuál es el producto en sí.</li>
+  <li>La subconsulta "codigos_productos_populares" se encarga de obtener los códigos de los productos más populares en cada departamento. Se realiza un JOIN entre la subconsulta "s" y la subconsulta "prod_ciudades" utilizando la cantidad máxima de compras y el departamento. De esta manera, obtenemos los códigos de los productos más vendidos en cada departamento.</li>
+</ul>
+
+<p>Finalmente, en la consulta principal, se realiza un JOIN entre la subconsulta "codigos_productos_populares" y la tabla "productitios" para obtener el nombre de los productos más populares en cada departamento. Los resultados se ordenan por departamento.</p>
+
+<p>Esta consulta nos permite identificar el producto más vendido en cada ubicación geográfica, en este caso, en cada departamento.</p>
+																	
+							          <!-- 5 -->
+								   <h3 id="5. ¿Cuáles son los clientes que han comprado todos los productos disponibles?"><em>5. ¿Cuáles son los clientes que han comprado todos los productos disponibles?</em></h3>
+<p>Para identificar los clientes que han comprado todos los productos disponibles, se puede utilizar la siguiente consulta:</p>
+
+<pre><code>WITH productos_por_cliente AS (
+SELECT DISTINCT cliente, Codigo, COUNT(prod.producto) AS compras_producto
+FROM `clientes-386813.pepedatos.compritas` compras
+INNER JOIN `clientes-386813.pepedatos.productitios` prod ON Codigo = compras.producto
+GROUP BY cliente, Codigo
+ORDER BY cliente
+),
+cantidad_productos_cliente AS (
+SELECT cliente, COUNT(Codigo) AS cantidad_productos
+FROM productos_por_cliente
+GROUP BY cliente
+)
+
+SELECT DISTINCT cliente, Nombre_1, Apellidos, cantidad_productos
+FROM cantidad_productos_cliente 
+INNER JOIN `clientes-386813.pepedatos.datitosclientes` clientes ON cliente = Numero
+WHERE cantidad_productos = 10
+ORDER BY cliente
+</code></pre>
+
+<p>En esta consulta, se utilizan dos subconsultas:</p>
+
+<ol>
+  <li>La subconsulta "productos_por_cliente" se encarga de agrupar cada compra por cliente y producto, y cuenta la cantidad de veces que se ha comprado cada producto. Esto nos permite obtener un conteo de las compras de cada producto por cliente.</li>
+  <li>La subconsulta "cantidad_productos_cliente" cuenta la cantidad de productos diferentes que ha comprado cada cliente, utilizando la subconsulta anterior. De esta manera, obtenemos la cantidad total de productos comprados por cada cliente.</li>
+</ol>
+
+<p>Luego, en la consulta principal, se realiza un JOIN entre la subconsulta "cantidad_productos_cliente" y la tabla "datitosclientes" para obtener la información de los clientes. Se utiliza la condición WHERE para seleccionar únicamente los clientes que han comprado la cantidad total de productos disponibles, en este caso, 10 productos. Los resultados se ordenan por cliente.</p>
+
+<p>De esta forma, la consulta nos proporciona la lista de clientes que han comprado todos los productos disponibles, junto con sus nombres y apellidos.</p>									
 								</div>
 							</section>
 
