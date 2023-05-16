@@ -81,9 +81,63 @@ ORDER BY numero_compras DESC
 
 									
 									<!-- 2 --> 
-									
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
-									
+									 <h3 id="2. ¿Cuántos clientes han comprado productos de un rango de precios específico?"><em>2.    ¿Cuántos clientes han comprado productos de un rango de precios específico?</em></h3>
+
+<p>Para determinar cuántos clientes han comprado productos dentro de un rango de precios específico, como por ejemplo, entre $1.500 y $7.500, se puede utilizar la siguiente consulta:</p>
+
+<pre><code>WITH productos_intervalo AS (
+SELECT Codigo, Precio
+FROM `clientes-386813.pepedatos.productitios` 
+WHERE Precio &gt; 1500 AND Precio &lt; 7500
+), 
+compras_intervalo AS (
+SELECT Codigo, Precio, cliente
+FROM productos_intervalo 
+INNER JOIN `clientes-386813.pepedatos.compritas` compras ON compras.producto = Codigo
+),
+clientes AS (
+SELECT Numero, Nombre_1, Nombre_2, Apellidos
+FROM `clientes-386813.pepedatos.datitosclientes` 
+INNER JOIN compras_intervalo ON Numero = cliente
+GROUP BY Numero, Nombre_1, Nombre_2, Apellidos
+)
+
+SELECT COUNT(*) AS cantidad_clientes
+FROM clientes
+</code></pre>
+
+<p>En esta consulta, se utilizan dos subconsultas:</p>
+
+<ul>
+  <li>La primera subconsulta, llamada "productos_intervalo", selecciona los productos que tienen un precio dentro del rango especificado.</li>
+  <li>La segunda subconsulta, llamada "compras_intervalo", realiza un INNER JOIN entre los productos del rango y las compras realizadas, para obtener las compras correspondientes a dichos productos.</li>
+</ul>
+
+<p>Luego, se crea una tercera subconsulta, llamada "clientes", donde se selecciona la información de los clientes que realizaron compras dentro del rango de precios. Se utiliza un INNER JOIN entre la tabla de clientes y las compras del intervalo para obtener la información de los clientes correspondientes.</p>
+
+<p>Finalmente, se realiza una consulta principal donde se cuenta la cantidad de clientes en la tabla "clientes". Esto nos devuelve el número de clientes que han comprado productos dentro del rango de precios específico.</p>
+
+<p>Si además de la cantidad de clientes, se desea conocer la información de los clientes que realizaron estas compras, se puede utilizar la siguiente consulta:</p>
+
+<pre><code>WITH productos_intervalo AS (
+SELECT Codigo, Precio
+FROM `clientes-386813.pepedatos.productitios` 
+WHERE Precio &gt; 1500 AND Precio &lt; 7500
+), 
+compras_intervalo AS (
+SELECT Codigo, Precio, cliente
+FROM productos_intervalo 
+INNER JOIN `clientes-386813.pepedatos.compritas` compras ON compras.producto = Codigo
+)
+
+SELECT Numero, Nombre_1, Nombre_2, Apellidos
+FROM `clientes-386813.pepedatos.datitosclientes` 
+INNER JOIN compras_intervalo ON Numero = cliente
+GROUP BY Numero, Nombre_1, Nombre_2, Apellidos
+</code></pre>
+
+<p>En esta consulta, se realiza un INNER JOIN entre las subconsultas "productos_intervalo" y "compras_intervalo" con la tabla de clientes para obtener la información de los clientes que realizaron las compras dentro del rango de precios. La consulta devuelve los datos de los clientes, como el número, nombres y apellidos.</p>
+				
 									<!-- 3 -->				
 
 									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
