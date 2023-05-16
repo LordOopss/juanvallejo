@@ -50,24 +50,35 @@
 									<h3 id="Preguntas">PREGUNTAS</h3>
                                                                         <h3 id="1-cuál-es-el-producto-más-vendido-en-una-ubicación-geográfica-específica"><em>1.	¿Cuál es el producto más vendido en una ubicación geográfica específica?</em></h3>
 
-                                                                        <p>Para este caso se tomó como ubicación geográfica a la ciudad de nacimiento, especificamente la ciudad de cartagena </p>
-									
-									<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">WITH</span> <span class="n">clientes_barranquilla</span> <span class="k">AS</span> <span class="p">(</span>
-                                                                        <span class="k">SELECT</span> <span class="n">Numero</span><span class="p">,</span> <span class="n">Nombre_1</span><span class="p">,</span> <span class="n">Nombre_2</span><span class="p">,</span> <span class="n">Apellidos</span><span class="p">,</span> <span class="n">Ciudad_de_Nacimiento</span>
-                                                                        <span class="k">FROM</span> <span class="nv">`int-is.is_act3.clientes`</span> 
-                                                                        <span class="k">WHERE</span> <span class="n">Ciudad_de_Nacimiento</span> <span class="o">=</span> <span class="s1">'Barranquilla'</span>
-                                                                        <span class="p">),</span> 
-                                                                        <span class="n">compras_barranquilla</span> <span class="k">AS</span><span class="p">(</span>
-                                                                        <span class="k">SELECT</span> <span class="n">Numero</span><span class="p">,</span> <span class="n">producto</span> <span class="k">As</span> <span class="n">Codigo</span>
-                                                                        <span class="k">FROM</span> <span class="n">clientes_barranquilla</span> <span class="n">cli</span>
-                                                                        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">`is_act3.compras`</span> <span class="n">com</span> <span class="k">ON</span> <span class="n">cli</span><span class="p">.</span><span class="n">Numero</span> <span class="o">=</span> <span class="n">com</span><span class="p">.</span><span class="n">cliente</span>
-                                                                        <span class="p">)</span>
-                                                                        <span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">numero_compras</span><span class="p">,</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span><span class="p">,</span> <span class="n">Producto</span> 
-                                                                        <span class="k">FROM</span> <span class="n">compras_barranquilla</span> <span class="n">com</span>
-                                                                        <span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">`is_act3.productos`</span> <span class="n">prod</span> <span class="k">ON</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span> <span class="o">=</span> <span class="n">com</span><span class="p">.</span><span class="n">Codigo</span>
-                                                                        <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">Producto</span><span class="p">,</span> <span class="n">prod</span><span class="p">.</span><span class="n">Codigo</span>
-                                                                        <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">numero_compras</span> <span class="k">DESC</span>
-                                                                        </code></pre></div></div>
+<p>Para este caso, se tomó como ubicación geográfica la ciudad de Cartagena. A continuación, se muestra la consulta SQL utilizada:</p>
+
+<pre><code>WITH clientes_cartagena AS (
+SELECT Numero, Nombre_1, Nombre_2, Apellidos, Ciudad_de_Nacimiento
+FROM `clientes-386813.pepedatos.datitosclientes` 
+WHERE Ciudad_de_Nacimiento = 'Cartagena'
+), 
+compras_cartagena AS(
+SELECT Numero, producto As Codigo
+FROM clientes_cartagena cli
+INNER JOIN `clientes-386813.pepedatos.compritas` com ON cli.Numero = com.cliente
+)
+
+SELECT COUNT(*) AS numero_compras, prod.Codigo, Producto 
+FROM compras_cartagena com
+INNER JOIN `clientes-386813.pepedatos.productitios` prod ON prod.Codigo = com.Codigo
+GROUP BY Producto, prod.Codigo
+ORDER BY numero_compras DESC
+</code></pre>
+
+<p>En esta consulta, se utilizan dos subconsultas:</p>
+
+<ul>
+  <li>La primera subconsulta, llamada "clientes_cartagena", selecciona los datos necesarios de la tabla "datitosclientes" para filtrar aquellos clientes que tienen a Cartagena como su ciudad de nacimiento.</li>
+  <li>La segunda subconsulta, llamada "compras_cartagena", realiza un INNER JOIN con la tabla "compritas" para obtener las compras realizadas por los clientes de Cartagena.</li>
+</ul>
+
+<p>Luego, se realiza una consulta principal en la cual se agrupan los datos por producto y código, y se utiliza la función COUNT para obtener el número de compras de cada producto. Esto nos devuelve una tabla con todos los productos, su código y el número de compras, ordenados desde el mayor número de compras al menor. De esta manera, el primer elemento de la lista será el producto más vendido.</p>
+
 									
 									<!-- 2 --> 
 									
